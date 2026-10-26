@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สื่อโต้ตอบเรื่อง สถิติและข้อมูล (ข้อมูลปฐมภูมิ vs ข้อมูลทุติยภูมิ) - ม.5</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Sarabun & Kanit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Sarabun', 'sans-serif'],
+                        heading: ['Kanit', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0284c7',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                        },
+                        secondary: {
+                            50: '#fdf4ff',
+                            100: '#fae8ff',
+                            500: '#a855f7',
+                            600: '#9333ea',
+                            700: '#7e22ce',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom styles for animations & layout */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        .pulse-slow {
+            animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        input[type=range] {
+            accent-color: #0284c7;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col justify-between selection:bg-sky-500 selection:text-white">
+
+    <!-- Header Navigation -->
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-sky-600 text-white p-2 rounded-xl shadow-md">
+                    <i data-lucide="bar-chart-2" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h1 class="font-heading text-lg sm:text-xl font-bold text-slate-800 leading-tight">สถิติและข้อมูล (ม.5)</h1>
+                    <p class="text-xs text-slate-500">ข้อมูลปฐมภูมิ (Primary) vs ข้อมูลทุติยภูมิ (Secondary)</p>
+                </div>
+            </div>
+            <nav class="hidden md:flex space-x-6 font-medium text-sm text-slate-600">
+                <a href="#concept" class="hover:text-sky-600 transition-colors">บทเรียน</a>
+                <a href="#simulation" class="hover:text-sky-600 transition-colors">แบบจำลองโต้ตอบ</a>
+                <a href="#quiz" class="hover:text-sky-600 transition-colors">แบบทดสอบ</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12 flex-grow">
+
+        <!-- Hero Section & Introduction -->
+        <section class="bg-gradient-to-r from-sky-600 to-indigo-700 text-white rounded-3xl p-6 sm:p-10 shadow-xl relative overflow-hidden">
+            <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+            <div class="relative z-10 max-w-3xl">
+                <span class="bg-white/20 text-white text-xs px-3 py-1 rounded-full font-semibold uppercase tracking-wider">วิชาคณิตศาสตร์เพิ่มเติม / พื้นฐาน ม.5</span>
+                <h2 class="font-heading text-2xl sm:text-4xl font-bold mt-3 mb-4 leading-tight">เข้าใจประเภทข้อมูลทางสถิติได้อย่างง่ายดาย</h2>
+                <p class="text-sky-100 text-sm sm:text-base leading-relaxed mb-6">
+                    การจำแนกประเภทข้อมูลตามแหล่งที่มาของข้อมูลมีความสำคัญอย่างยิ่งในการศึกษาวิชาสถิติ โดยแบ่งออกเป็น <b>ข้อมูลปฐมภูมิ</b> และ <b>ข้อมูลทุติยภูมิ</b> มาเรียนรู้ข้อแตกต่าง ข้อดี ข้อเสีย ผ่านแบบจำลองสถานการณ์โต้ตอบกัน!
+                </p>
+                <div class="flex flex-wrap gap-3">
+                    <a href="#simulation" class="bg-white text-sky-700 hover:bg-sky-50 font-heading font-semibold px-5 py-2.5 rounded-xl shadow transition-all duration-200 inline-flex items-center gap-2">
+                        <i data-lucide="sliders" class="w-4 h-4"></i> เริ่มทดลองปรับตัวแปร
+                    </a>
+                    <a href="#quiz" class="bg-sky-800/50 hover:bg-sky-800 text-white border border-white/30 font-heading font-medium px-5 py-2.5 rounded-xl transition-all duration-200 inline-flex items-center gap-2">
+                        <i data-lucide="check-square" class="w-4 h-4"></i> ทำแบบทดสอบ (3 ข้อ)
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Concept Explanation Section -->
+        <section id="concept" class="space-y-6">
+            <div class="text-center max-w-2xl mx-auto">
+                <h2 class="font-heading text-2xl font-bold text-slate-800">เปรียบเทียบประเภทข้อมูลตามแหล่งที่มา</h2>
+                <p class="text-slate-600 text-sm mt-1">ทำความเข้าใจสรุปสาระสำคัญก่อนเริ่มทำแบบจำลอง</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Primary Data Card -->
+                <div class="glass-card rounded-2xl p-6 border-t-4 border-sky-500 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="bg-sky-100 text-sky-600 p-3 rounded-xl">
+                            <i data-lucide="user-check" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-heading text-xl font-bold text-slate-800">ข้อมูลปฐมภูมิ (Primary Data)</h3>
+                            <p class="text-xs text-sky-600 font-semibold">ผู้ใช้เก็บรวบรวมข้อมูลเองโดยตรงจากแหล่งกำเนิด</p>
+                        </div>
+                    </div>
+                    <ul class="space-y-2.5 text-sm text-slate-600">
+                        <li class="flex items-start gap-2">
+                            <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500 shrink-0 mt-0.5"></i>
+                            <span><b>วิธีการเก็บ:</b> การลงพื้นที่สอบถาม, สัมภาษณ์, แจกแบบสอบถาม, การทดลองในห้องแล็บ, การสังเกตการณ์</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i data-lucide="thumbs-up" class="w-4 h-4 text-sky-500 shrink-0 mt-0.5"></i>
+                            <span><b>ข้อดี:</b> ได้ข้อมูลที่ตรงตามเป้าหมายของงานวิจัย/ปัญหาที่ต้องการศึกษา ทันสมัย และตรงวัตถุประสงค์ที่สุด</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-500 shrink-0 mt-0.5"></i>
+                            <span><b>ข้อจำกัด:</b> เสียเวลา แรงงาน และงบประมาณสูง ถ้าต้องการกลุ่มตัวอย่างขนาดใหญ่</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Secondary Data Card -->
+                <div class="glass-card rounded-2xl p-6 border-t-4 border-purple-500 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="bg-purple-100 text-purple-600 p-3 rounded-xl">
+                            <i data-lucide="database" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-heading text-xl font-bold text-slate-800">ข้อมูลทุติยภูมิ (Secondary Data)</h3>
+                            <p class="text-xs text-purple-600 font-semibold">นำข้อมูลที่ผู้อื่นรวบรวมไว้แล้วมาใช้งานต่อ</p>
+                        </div>
+                    </div>
+                    <ul class="space-y-2.5 text-sm text-slate-600">
+                        <li class="flex items-start gap-2">
+                            <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500 shrink-0 mt-0.5"></i>
+                            <span><b>แหล่งข้อมูล:</b> รายงานรัฐบาล, สำนักงานสถิติแห่งชาติ, บทความวิชาการ, ทะเบียนราษฎร์, สถิติย้อนหลัง</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i data-lucide="thumbs-up" class="w-4 h-4 text-purple-500 shrink-0 mt-0.5"></i>
+                            <span><b>ข้อดี:</b> ประหยัดเวลา ค่าใช้จ่าย และได้กลุ่มตัวอย่าง/ฐานข้อมูลขนาดใหญ่ที่เก็บรวบรวมมายาวนาน</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-500 shrink-0 mt-0.5"></i>
+                            <span><b>ข้อจำกัด:</b> ข้อมูลอาจแมตช์ไม่ตรงเป้าหมาย 100% ข้อมูลอาจไม่อัปเดต หรือขาดความน่าเชื่อถือหากมาจากแหล่งที่ไม่น่าเชื่อถือ</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Simulation Section -->
+        <section id="simulation" class="bg-white rounded-3xl p-6 sm:p-8 shadow-md border border-slate-200 space-y-8">
+            <div class="border-b border-slate-200 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                    <span class="text-xs font-bold text-sky-600 uppercase tracking-wider">Interactive Lab</span>
+                    <h2 class="font-heading text-2xl font-bold text-slate-800">ห้องทดลองแบบจำลองสถานการณ์โต้ตอบ (Real-time Simulation)</h2>
+                </div>
+                <div class="text-xs text-slate-500 bg-slate-100 px-3 py-1.5 rounded-lg w-fit">
+                    <i data-lucide="info" class="w-3.5 h-3.5 inline mr-1"></i> ลองเลื่อน Slider เพื่อดูการเปลี่ยนแปลงของกราฟ
+                </div>
+            </div>
+
+            <!-- Controls & Visualization Grid -->
+            <div class="grid lg:grid-cols-12 gap-8 items-start">
+                
+                <!-- Sliders Panel (5 Cols) -->
+                <div class="lg:col-span-5 space-y-6 bg-slate-50 p-6 rounded-2xl border border-slate-200">
+                    <h3 class="font-heading text-lg font-semibold text-slate-800 flex items-center gap-2">
+                        <i data-lucide="sliders-horizontal" class="w-5 h-5 text-sky-600"></i> ปรับแต่งตัวแปรการวิจัย
+                    </h3>
+
+                    <!-- Variable 1 Slider -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center text-sm">
+                            <label for="var1" class="font-medium text-slate-700 flex items-center gap-1.5">
+                                <span class="w-2.5 h-2.5 rounded-full bg-sky-500"></span> [ตัวแปร 1] กลุ่มตัวอย่างที่เก็บเอง (Primary Sample)
+                            </label>
+                            <span id="var1-value" class="font-mono font-bold text-sky-600 bg-sky-100 px-2 py-0.5 rounded text-xs">100 คน</span>
+                        </div>
+                        <input type="range" id="var1" min="10" max="500" value="100" step="10"
+                            class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+                        <p class="text-xs text-slate-500">เพิ่มจำนวนคนเพื่อเพิ่มความน่าเชื่อถือ แต่จะเพิ่มทรัพยากรและเวลาที่ต้องใช้</p>
+                    </div>
+
+                    <hr class="border-slate-200">
+
+                    <!-- Variable 2 Slider -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center text-sm">
+                            <label for="var2" class="font-medium text-slate-700 flex items-center gap-1.5">
+                                <span class="w-2.5 h-2.5 rounded-full bg-purple-500"></span> [ตัวแปร 2] คุณภาพ/ขนาดฐานข้อมูลทุติยภูมิ (Secondary Quality)
+                            </label>
+                            <span id="var2-value" class="font-mono font-bold text-purple-600 bg-purple-100 px-2 py-0.5 rounded text-xs">70%</span>
+                        </div>
+                        <input type="range" id="var2" min="10" max="100" value="70" step="5"
+                            class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+                        <p class="text-xs text-slate-500">ปรับระดับความน่าเชื่อถือและความสมบูรณ์ของแหล่งข้อมูลสำรองที่นำมาใช้</p>
+                    </div>
+
+                    <!-- Live Insight Metric Summary -->
+                    <div class="pt-2">
+                        <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-xs text-amber-800 space-y-1">
+                            <p class="font-semibold flex items-center gap-1">
+                                <i data-lucide="lightbulb" class="w-4 h-4 text-amber-600"></i> ข้อสังเกตสถิติ:
+                            </p>
+                            <p id="insight-text">กำลังคำนวณสถิติเปรียบเทียบ...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visualization Panel (7 Cols) -->
+                <div class="lg:col-span-7 space-y-6">
+                    <!-- Dynamic Radar/Bar Chart -->
+                    <div class="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200 shadow-sm">
+                        <h4 class="font-heading text-base font-semibold text-slate-800 mb-4 flex items-center justify-between">
+                            <span>เปรียบเทียบคุณสมบัติ 3 มิติ (Real-time Comparison)</span>
+                            <span class="text-xs font-normal text-slate-400">อัปเดตอัตโนมัติ</span>
+                        </h4>
+                        <div class="relative h-64 sm:h-72 w-full">
+                            <canvas id="comparisonChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Cost & Time Canvas Animation -->
+                    <div class="bg-slate-900 text-white p-5 rounded-2xl shadow-inner space-y-3">
+                        <div class="flex justify-between items-center text-xs">
+                            <span class="font-semibold text-slate-300 flex items-center gap-1.5">
+                                <i data-lucide="activity" class="w-4 h-4 text-emerald-400"></i> Visualizer แสดงภาระงานและค่าใช้จ่ายในการเก็บข้อมูล
+                            </span>
+                            <span class="text-slate-400 font-mono" id="time-cost-estimate">เวลาที่ใช้โดยประมาณ: 5 วัน</span>
+                        </div>
+                        <div class="relative w-full h-16 bg-slate-800 rounded-xl overflow-hidden">
+                            <canvas id="animCanvas" class="w-full h-full"></canvas>
+                        </div>
+                        <div class="flex justify-between text-[11px] text-slate-400">
+                            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-sky-400"></span> ข้อมูลปฐมภูมิ (ต้องใช้เวลาเดินเก็บ)</span>
+                            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-purple-400"></span> ข้อมูลทุติยภูมิ (ดาวน์โหลดได้ทันที)</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Quiz Section -->
+        <section id="quiz" class="bg-white rounded-3xl p-6 sm:p-8 shadow-md border border-slate-200 space-y-8">
+            <div class="border-b border-slate-200 pb-4">
+                <span class="text-xs font-bold text-sky-600 uppercase tracking-wider">Assessment</span>
+                <h2 class="font-heading text-2xl font-bold text-slate-800">แบบทดสอบวัดความเข้าใจ (3 ข้อ)</h2>
+                <p class="text-slate-500 text-sm">ทดสอบความรู้ความเข้าใจเรื่องข้อมูลปฐมภูมิและข้อมูลทุติยภูมิพร้อมคำอธิบายเฉลย</p>
+            </div>
+
+            <form id="quiz-form" class="space-y-8">
+                
+                <!-- Q1 -->
+                <div class="bg-slate-50 p-5 sm:p-6 rounded-2xl border border-slate-200 space-y-4">
+                    <h3 class="font-heading font-semibold text-slate-800 text-base flex items-start gap-2">
+                        <span class="bg-sky-600 text-white text-xs w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5">1</span>
+                        <span>สถานการณ์ใดต่อไปนี้เป็นการจัดเก็บ <b>"ข้อมูลปฐมภูมิ" (Primary Data)</b>?</span>
+                    </h3>
+                    <div class="space-y-2 pl-8">
+                        <label class="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-200 hover:bg-sky-50/50 cursor-pointer transition-colors text-sm">
+                            <input type="radio" name="q1" value="A" class="text-sky-600 focus:ring-sky-500">
+                            <span>ก. นกอ่านสถิติประชากรจากเว็บไซต์ของสำนักงานสถิติแห่งชาติ</span>
+                        </label>
+                        <label class="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-200 hover:bg-sky-50/50 cursor-pointer transition-colors text-sm">
+                            <input type="radio" name="q1" value="B" class="text-sky-600 focus:ring-sky-500">
+                            <span>ข. ต้นออกแบบและแจกแบบสอบถามออนไลน์เพื่อสอบถามความพึงพอใจของเพื่อน ม.5 ในโรงเรียน</span>
+                        </label>
+                        <label class="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-200 hover:bg-sky-50/50 cursor-pointer transition-colors text-sm">
+                            <input type="radio" name="q1" value="C" class="text-sky-600 focus:ring-sky-500">
+                            <span>ค. ปลานำข้อมูลยอดขายปียอดหลัง 5 ปีจากแผนกบัญชีของบริษัทมาทำวิเคราะห์</span>
+                        </label>
+                        <label class="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-200 hover:bg-sky-50/50 cursor-pointer transition-colors text-sm">
+                            <input type="radio" name="q1" value="D" class="text-sky-600 focus:ring-sky-500">
+                            <span>ง. กานต์ดาวน์โหลดรายงานผลกระทบสิ่งแวดล้อมจากกรมควบคุมมลพิษมาใช้อ้างอิง</span>
+                        </label>
+                    </div>
+                    <div id="q1-explanation" class="hidden pl-8 p-3.5 rounded-xl text-xs sm:text-sm font-medium"></div>
+                </div>
+
+                <!-- Q2 -->
+                <div class="bg-slate-50 p-5 sm:p-6 rounded-2xl border border-slate-200 space-y-4">
+                    <h3 class="font-heading font-semibold text-slate-800 text-base flex items-start gap-2">
+                        <span class="bg-sky-600 text-white text-xs w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5">2</span>
+                        <span>ข้อใดกล่าวถึง <b>"ข้อมูลทุติยภูมิ" (Secondary Data)</b> ได้ถูกต้องที่สุด?</span>
+                    </h3>
+                    <div class="space-y-2 pl-8">
+                        <label class="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-200 hover:bg-sky-50/50 cursor-pointer transition-colors text-sm">
+                            <input type="radio" name="q2" value="A" class="text-sky-600 focus:ring-sky-500">
+                            <span>ก. เป็นข้อมูลที่ผู้ใช้ต้องลงพื้นที่สัมภาษณ์ผู้ให้ข้อมูลด้วยตนเองเสมอ</span>
+                        </label>
+                        <label class="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-200 hover:bg-sky-50/50 cursor-pointer transition-colors text-sm">
+                            <input type="radio" name="q2" value="B" class="text-sky-600 focus:ring-sky-500">
+                            <span>ข. ช่วยประหยัดเวลาและค่าใช้จ่ายเนื่องจากมีผู้รวบรวมไว้แล้ว แต่ต้องระวังเรื่องความถูกต้องและทันสมัย</span>
+                        </label>
+                        <label class="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-200 hover:bg-sky-50/50 cursor-pointer transition-colors text-sm">
+                            <input type="radio" name="q2" value="C" class="text-sky-600 focus:ring-sky-500">
+                            <span>ค. เป็นข้อมูลที่มีความถูกต้องตรงตามวัตถุประสงค์เฉพาะของการวิจัยเรา 100% เสมอ</span>
+                        </label>
+                        <label class="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-200 hover:bg-sky-50/50 cursor-pointer transition-colors text-sm">
+                            <input type="radio" name="q2" value="D" class="text-sky-600 focus:ring-sky-500">
+                            <span>ง. ข้อมูลจากการทดลองทางวิทยาศาสตร์ในห้องปฏิบัติการจัดเป็นข้อมูลทุติยภูมิ</span>
+                        </label>
+                    </div>
+                    <div id="q2-explanation" class="hidden pl-8 p-3.5 rounded-xl text-xs sm:text-sm font-medium"></div>
+                </div>
+
+                <!-- Q3 -->
+                <div class="bg-slate-50 p-5 sm:p-6 rounded-2xl border border-slate-200 space-y-4">
+                    <h3 class="font-heading font-semibold text-slate-800 text-base flex items-start gap-2">
+                        <span class="bg-sky-600 text-white text-xs w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5">3</span>
+                        <span><b>สถานการณ์ประยุกต์:</b> กลุ่มนักเรียนต้องการทำโครงงานเรื่อง "แนวโน้มการเปลี่ยนแปลงของอุณหภูมิเฉลี่ยในประเทศไทยย้อนหลัง 30 ปี" ควรเลือกใช้ข้อมูลชนิดใดจึงจะเหมาะสมที่สุด?</span>
+                    </h3>
+                    <div class="space-y-2 pl-8">
+                        <label class="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-200 hover:bg-sky-50/50 cursor-pointer transition-colors text-sm">
+                            <input type="radio" name="q3" value="A" class="text-sky-600 focus:ring-sky-500">
+                            <span>ก. ข้อมูลปฐมภูมิ โดยการซื้อเทอร์โมมิเตอร์ไปติดตั้งและจดบันทึกเองเป็นเวลา 30 ปี</span>
+                        </label>
+                        <label class="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-200 hover:bg-sky-50/50 cursor-pointer transition-colors text-sm">
+                            <input type="radio" name="q3" value="B" class="text-sky-600 focus:ring-sky-500">
+                            <span>ข. ข้อมูลปฐมภูมิ โดยการเดินสัมภาษณ์ผู้สูงอายุเกี่ยวกับสภาพอากาศในอดีต</span>
+                        </label>
+                        <label class="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-200 hover:bg-sky-50/50 cursor-pointer transition-colors text-sm">
+                            <input type="radio" name="q3" value="C" class="text-sky-600 focus:ring-sky-500">
+                            <span>ค. ข้อมูลทุติยภูมิ โดยการขอสถิติอุณหภูมิย้อนหลังอ้างอิงจากกรมอุตุนิยมวิทยา</span>
+                        </label>
+                        <label class="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-200 hover:bg-sky-50/50 cursor-pointer transition-colors text-sm">
+                            <input type="radio" name="q3" value="D" class="text-sky-600 focus:ring-sky-500">
+                            <span>ง. ข้อมูลปฐมภูมิ โดยการสุ่มส่องกล้องวัดอุณหภูมิบรรยากาศรอบๆ โรงเรียน</span>
+                        </label>
+                    </div>
+                    <div id="q3-explanation" class="hidden pl-8 p-3.5 rounded-xl text-xs sm:text-sm font-medium"></div>
+                </div>
+
+                <!-- Submit Button & Score Display -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t border-slate-200">
+                    <button type="button" id="submit-btn" onclick="checkQuiz()"
+                        class="bg-sky-600 hover:bg-sky-700 text-white font-heading font-semibold px-8 py-3 rounded-xl shadow-md transition-all duration-200 flex items-center justify-center gap-2">
+                        <i data-lucide="check-circle" class="w-5 h-5"></i> ตรวจคำตอบ
+                    </button>
+
+                    <div id="score-card" class="hidden bg-sky-50 border border-sky-200 text-sky-800 px-5 py-3 rounded-xl flex items-center justify-between gap-4">
+                        <div class="text-sm font-medium">คะแนนที่ได้:</div>
+                        <div class="font-heading text-xl font-bold text-sky-700" id="score-text">0 / 3</div>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-6 border-t border-slate-800 mt-12 text-center text-xs">
+        <div class="max-w-7xl mx-auto px-4">
+            <p>สื่อการเรียนรู้โต้ตอบ สถิติและข้อมูล (ม.5) | ออกแบบตามหลักสูตรแกนกลางการศึกษาขั้นพื้นฐาน</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Canvas Animation Variables
+        let chartInstance = null;
+        let animCanvas = document.getElementById('animCanvas');
+        let ctxAnim = animCanvas.getContext('2d');
+        let animationFrameId = null;
+
+        // Interactive Sliders Elements
+        const var1Slider = document.getElementById('var1');
+        const var2Slider = document.getElementById('var2');
+        const var1Value = document.getElementById('var1-value');
+        const var2Value = document.getElementById('var2-value');
+        const insightText = document.getElementById('insight-text');
+        const timeCostEstimate = document.getElementById('time-cost-estimate');
+
+        // Setup Responsive Canvas Resolution
+        function resizeCanvas() {
+            if (animCanvas) {
+                animCanvas.width = animCanvas.offsetWidth;
+                animCanvas.height = animCanvas.offsetHeight;
+            }
+        }
+        window.addEventListener('resize', resizeCanvas);
+
+        // Chart Initialization
+        function initChart() {
+            const ctxChart = document.getElementById('comparisonChart').getContext('2d');
+            chartInstance = new Chart(ctxChart, {
+                type: 'bar',
+                data: {
+                    labels: ['ความตรงกับเป้าหมาย (Relevance)', 'ความประหยัดเวลา/งบ (Efficiency)', 'ขนาดกลุ่มตัวอย่าง/ความครอบคลุม (Scale)'],
+                    datasets: [
+                        {
+                            label: 'ข้อมูลปฐมภูมิ (Primary)',
+                            data: [95, 20, 30],
+                            backgroundColor: 'rgba(2, 132, 199, 0.85)',
+                            borderColor: '#0284c7',
+                            borderWidth: 1,
+                            borderRadius: 6
+                        },
+                        {
+                            label: 'ข้อมูลทุติยภูมิ (Secondary)',
+                            data: [70, 90, 85],
+                            backgroundColor: 'rgba(168, 85, 247, 0.85)',
+                            borderColor: '#a855f7',
+                            borderWidth: 1,
+                            borderRadius: 6
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                callback: function(value) { return value + '%'; }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                font: { family: 'Sarabun' }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.raw + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update Dashboard Data based on Sliders
+        function updateSimulation() {
+            const sampleSize = parseInt(var1Slider.value);
+            const secondaryQuality = parseInt(var2Slider.value);
+
+            // Update Labels
+            var1Value.textContent = `${sampleSize} คน`;
+            var2Value.textContent = `${secondaryQuality}%`;
+
+            // Dynamic Metric Calculations
+            // Primary Data
+            const primaryRelevance = 95; // High direct relevance
+            const primaryEfficiency = Math.max(5, Math.round(100 - (sampleSize / 500) * 85)); // Cost/time savings decrease as sample increases
+            const primaryScale = Math.min(100, Math.round((sampleSize / 500) * 100)); // Scale increases with sample size
+
+            // Secondary Data
+            const secondaryRelevance = Math.round(secondaryQuality * 0.85); // Depends on secondary quality
+            const secondaryEfficiency = 90; // Always high efficiency in time/cost
+            const secondaryScale = Math.round(Math.min(100, 50 + (secondaryQuality * 0.5))); // High scale
+
+            // Update Chart
+            if (chartInstance) {
+                chartInstance.data.datasets[0].data = [primaryRelevance, primaryEfficiency, primaryScale];
+                chartInstance.data.datasets[1].data = [secondaryRelevance, secondaryEfficiency, secondaryScale];
+                chartInstance.update();
+            }
+
+            // Estimate Time required for Primary Collection
+            const estimatedDays = Math.ceil(sampleSize / 20);
+            timeCostEstimate.textContent = `การเก็บเองใช้วลาประมาณ ~ ${estimatedDays} วัน (ค่าใช้จ่าย ~ ${sampleSize * 50} บาท)`;
+
+            // Insight Text Feedback
+            if (sampleSize > 300 && secondaryQuality > 70) {
+                insightText.textContent = "กลุ่มตัวอย่างปฐมภูมิขนาดใหญ่ให้ความน่าเชื่อถือสูงมาก แต่แลกด้วยเวลาและงบประมาณที่สูง ควรพิจารณาใช้ข้อมูลทุติยภูมิที่มีคุณภาพเสริม!";
+            } else if (sampleSize < 50) {
+                insightText.textContent = "กลุ่มตัวอย่างปฐมภูมิต่ำกว่า 50 อาจไม่สะท้อนประชากรทั้งหมด แม้จะประหยัดเวลาก็ตาม";
+            } else {
+                insightText.textContent = `ข้อมูลปฐมภูมิ (${sampleSize} กลุ่มตัวอย่าง) ให้ความตรงเป้าหมายสูงกว่า แต่ข้อมูลทุติยภูมิคุณภาพ (${secondaryQuality}%) ช่วยให้เปรียบเทียบภาพรวมได้เร็วกว่า`;
+            }
+        }
+
+        // Animated Visual Canvas Simulation
+        let particles = [];
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < 25; i++) {
+                particles.push({
+                    x: Math.random() * animCanvas.width,
+                    y: Math.random() * animCanvas.height,
+                    speed: 0.5 + Math.random() * 1.5,
+                    type: Math.random() > 0.5 ? 'primary' : 'secondary',
+                    radius: 3 + Math.random() * 3
+                });
+            }
+        }
+
+        function drawParticles() {
+            if (!ctxAnim) return;
+            ctxAnim.clearRect(0, 0, animCanvas.width, animCanvas.height);
+
+            const speedMultiplier = parseInt(var1Slider.value) / 100;
+
+            particles.forEach(p => {
+                ctxAnim.beginPath();
+                ctxAnim.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                
+                if (p.type === 'primary') {
+                    ctxAnim.fillStyle = '#38bdf8'; // Sky blue
+                    p.x += p.speed * speedMultiplier;
+                } else {
+                    ctxAnim.fillStyle = '#c084fc'; // Purple
+                    p.x += p.speed * 2; // Secondary is faster
+                }
+
+                ctxAnim.fill();
+
+                if (p.x > animCanvas.width) {
+                    p.x = 0;
+                    p.y = Math.random() * animCanvas.height;
+                }
+            });
+
+            animationFrameId = requestAnimationFrame(drawParticles);
+        }
+
+        // Quiz Logic & Answers
+        const answers = {
+            q1: {
+                correct: 'B',
+                explanation: '<b>ถูกต้อง!</b> ต้นทำข้อมูลปฐมภูมิเนื่องจากลงมือสร้างแบบสอบถามและจัดเก็บข้อมูลด้วยตนเองโดยตรง ไม่ได้นำผลลัพธ์ของคนอื่นมาใช้'
+            },
+            q2: {
+                correct: 'B',
+                explanation: '<b>ถูกต้อง!</b> ข้อมูลทุติยภูมิคือข้อมูลที่มีผู้อื่นเก็บรวบรวมไว้แล้ว ช่วยประหยัดเวลา/งบประมาณ แต่ผู้ใช้ต้องตรวจสอบความถูกต้อง ความน่าเชื่อถือ และความไม่อัปเดตของข้อมูล'
+            },
+            q3: {
+                correct: 'C',
+                explanation: '<b>ถูกต้อง!</b> สถิติอุณหภูมิย้อนหลัง 30 ปีเป็นไปไม่ได้ที่จะเก็บเองในระยะเวลาสั้นๆ การใช้ข้อมูลทุติยภูมิจากหน่วยงานที่มีความน่าเชื่อถืออย่างกรมอุตุนิยมวิทยาจึงเป็นทางเลือกที่ดีที่สุด'
+            }
+        };
+
+        function checkQuiz() {
+            let score = 0;
+            const form = document.getElementById('quiz-form');
+
+            for (let i = 1; i <= 3; i++) {
+                const qName = `q${i}`;
+                const selected = form.querySelector(`input[name="${qName}"]:checked`);
+                const expDiv = document.getElementById(`q${qName}-explanation`);
+
+                expDiv.classList.remove('hidden', 'bg-emerald-100', 'text-emerald-800', 'bg-rose-100', 'text-rose-800', 'border-emerald-300', 'border-rose-300');
+                expDiv.classList.add('border');
+
+                if (selected) {
+                    if (selected.value === answers[qName].correct) {
+                        score++;
+                        expDiv.classList.add('bg-emerald-50', 'text-emerald-800', 'border-emerald-200');
+                        expDiv.innerHTML = `<span class="font-bold text-emerald-700">✓ ถมถูกต้อง!</span> ${answers[qName].explanation}`;
+                    } else {
+                        expDiv.classList.add('bg-rose-50', 'text-rose-800', 'border-rose-200');
+                        expDiv.innerHTML = `<span class="font-bold text-rose-700">✗ ยังไม่ถูกต้อง</span> คำตอบที่ถูกต้องคือข้อ ${answers[qName].correct}. ${answers[qName].explanation}`;
+                    }
+                } else {
+                    expDiv.classList.add('bg-amber-50', 'text-amber-800', 'border-amber-200');
+                    expDiv.innerHTML = `<span class="font-bold text-amber-700">! ยังไม่ได้ตอบข้อนี้</span> เฉลยคือข้อ ${answers[qName].correct}. ${answers[qName].explanation}`;
+                }
+                expDiv.classList.remove('hidden');
+            }
+
+            // Show Score Card
+            const scoreCard = document.getElementById('score-card');
+            const scoreText = document.getElementById('score-text');
+            scoreText.textContent = `${score} / 3 คะแนน`;
+            scoreCard.classList.remove('hidden');
+        }
+
+        // Initialize Events on Page Load
+        window.onload = function() {
+            initChart();
+            resizeCanvas();
+            initParticles();
+            drawParticles();
+
+            // Event Listeners for Sliders
+            var1Slider.addEventListener('input', updateSimulation);
+            var2Slider.addEventListener('input', updateSimulation);
+
+            // Initial Simulation Calculation
+            updateSimulation();
+        };
+    </script>
+</body>
+</html>
